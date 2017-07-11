@@ -1,0 +1,10 @@
+[package]
+name = "stm32f3-liar-test"
+version = "0.1.0"
+authors = ["Sean Bolton <sean@smbolton.com>"]
+
+[dependencies]
+cortex-m-rt = "^0.2.3"
+cortex-m = "^0.2.7"
+#libc = { version = "0.2.11", default-features = false }
+liar = { path = "../liar-git", default-features = false }
