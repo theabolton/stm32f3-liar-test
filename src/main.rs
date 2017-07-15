@@ -23,6 +23,15 @@ fn nop(b: &mut Bencher<u64>) {
     b.run(|| {});
 }
 
+fn foo(b: &mut Bencher<u64>) {
+    b.run(|| {
+        let mut a = [0u32; 128];
+        for i in 0..128 {
+            a[i] = 128 - i as u32;
+        }
+    })
+}
+
 fn main() {
     hprintln!("liar test starting");
 
@@ -30,14 +39,31 @@ fn main() {
     let mut b = Bencher::new(&mut samples, time, diff);
 
     b.bench("nop", &mut nop);
-    // !FIX! do something with the results
+    b.bench("foo", &mut foo);
+
+    // report results over semihosting
+    for sample in b.samples() {
+        if !sample.is_some() {
+            continue;
+        }
+        let sample = sample.as_ref().unwrap();
+        hprintln!("{}:", sample.name);
+        for s in sample.data.iter() {
+            hprintln!("    {}", s);
+        }
+    }
 
     hprintln!("liar test finished");
 }
 
 // !FIX! need to set up a real timer
+static mut FAKE_TIMER: u64 = 0;
+
 fn time() -> u64 {
-    0u64
+    unsafe {
+        FAKE_TIMER += 10;
+        FAKE_TIMER
+    }
 }
 
 fn diff(start: &u64, end: &u64) -> u64 {
