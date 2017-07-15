@@ -17,7 +17,7 @@ extern crate cortex_m_rt;
 extern crate liar;
 
 use cortex_m::asm;
-use liar::bencher::no_std::Bencher;
+use liar::no_std::bencher::Bencher;
 
 fn nop(b: &mut Bencher<u64>) {
     b.run(|| {});
