@@ -8,6 +8,10 @@
 // Licensed under the MIT/X11 license, see the included file 'LICENSE' for
 // details.
 
+// This uses the DWT cycle counter, clocked using the internal 8MHz HSI clock.
+// The CYCCNT register is 32-bit, so at 8MHz that means intervals of almost 9
+// minutes (536 seconds) can be timed before overflow.
+
 #![feature(used)]
 #![no_std]
 
@@ -17,6 +21,7 @@ extern crate cortex_m_rt;
 extern crate liar;
 
 use cortex_m::asm;
+use cortex_m::peripheral::DWT;
 use liar::no_std::bencher::Bencher;
 
 fn nop(b: &mut Bencher<u64>) {
@@ -33,6 +38,10 @@ fn foo(b: &mut Bencher<u64>) {
 }
 
 fn main() {
+    // enable the cycle counter
+    let dwt = DWT.get();
+    unsafe { (*dwt).enable_cycle_counter(); }
+
     hprintln!("liar test starting");
 
     let mut samples = [None, None, None];
@@ -56,18 +65,18 @@ fn main() {
     hprintln!("liar test finished");
 }
 
-// !FIX! need to set up a real timer
-static mut FAKE_TIMER: u64 = 0;
-
 fn time() -> u64 {
+    // read the DWT cycle counter
+    let dwt = DWT.get();
     unsafe {
-        FAKE_TIMER += 10;
-        FAKE_TIMER
+        (*dwt).cyccnt.read() as u64
     }
 }
 
 fn diff(start: &u64, end: &u64) -> u64 {
-    end - start
+    // The cycle counter wraps without any bookkeeping, so do the subtraction
+    // modulo 2^32.
+    (*end as u32).wrapping_sub(*start as u32) as u64
 }
 
 #[allow(dead_code)]
