@@ -1,3 +1,12 @@
+// stm32f3-liar-test src/main.rs
+//
+// A test harnesss for the 'liar' crate, which tests running it in no_std
+// environment, specifically, on an STM32F3 Discovery development board.
+//
+// Copyright © 2017 Sean Bolton
+//
+// Licensed under the MIT/X11 license, see the included file 'LICENSE' for
+// details.
 
 #![feature(used)]
 #![no_std]
@@ -26,15 +35,8 @@ fn main() {
     hprintln!("liar test finished");
 }
 
-// !FIX! need to set up timer(s) to 
-// TIM2 is 32-bit, but can only be clocked by the APB1 bus clock @ 8MHz
-// TIM1 and TIM8 can be fed by the PLL (on my 303xC), up to 144MHz
+// !FIX! need to set up a real timer
 fn time() -> u64 {
-    // let mut ts = libc::timespec { tv_sec: 0, tv_nsec: 0 };
-    // unsafe {
-    //     libc::clock_gettime(libc::CLOCK_MONOTONIC, &mut ts);
-    // }
-    // (ts.tv_sec * 1_000_000_000 + ts.tv_nsec) as u64
     0u64
 }
 
