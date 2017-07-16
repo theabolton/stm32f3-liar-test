@@ -28,6 +28,7 @@ extern crate liar;
 use cortex_m::asm;
 use cortex_m::peripheral::DWT;
 use stm32f30x::{FLASH, RCC};
+use liar::black_box;
 use liar::no_std::bencher::Bencher;
 
 // set_sys_clock()
@@ -78,14 +79,14 @@ fn set_sys_clock() {
 }
 
 fn nop(b: &mut Bencher<u64>) {
-    b.run(|| {});
+    b.run(|| { black_box(0); });
 }
 
 fn foo(b: &mut Bencher<u64>) {
     b.run(|| {
         let mut a = [0u32; 128];
         for i in 0..128 {
-            a[i] = 128 - i as u32;
+            a[i] = black_box(128 - i as u32);
         }
     })
 }
