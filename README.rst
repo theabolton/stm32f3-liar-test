@@ -14,7 +14,7 @@ be able to run this in much the same way.
 
 Output
 ------
-Right now, the code just dumps the liar::no_std::runner::Samples struct for each
+Right now, the code just dumps the `liar::no_std::runner::Samples` struct for each
 test run. I modified my copy of liar to perform 10 iterations per run_loop()
 with 4 samples per run(), so that it wouldn't take all day nor spew pages of
 output. The output looks like this:
