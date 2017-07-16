@@ -1,16 +1,40 @@
 stm32f3-liar-test
 =================
 
-This is some very-WIP test code for the `liar benchmarking crate
+This is some work-in-progress test code for the `liar benchmarking crate
 <https://github.com/ranweiler/liar>`_. At present, it is able to compile and
-run liar on an STM32F3 Discovery board, but without meaningful results, since
-I haven't written a timing source yet.
+run liar on an STM32F3 Discovery board, benchmark short functions using the
+Cortex-M DWT cycle counter, and present very simple results via semihosting.
 
 This is built on top of Jorge Aparicio's embedded Rust work, including the
 `xargo <https://github.com/japaric/xargo>`_ cross-compilation tool and his
 `Cortex-M <https://github.com/japaric/cortex-m-rt>`_ runtime. If you can get his
 `quickstart examples <http://blog.japaric.io/quickstart/>`_ running, you should
 be able to run this in much the same way.
+
+Output
+------
+Right now, the code just dumps the liar::no_std::runner::Samples struct for each
+test run. I modified my copy of liar to perform 10 iterations per run_loop()
+with 4 samples per run(), so that it wouldn't take all day nor spew pages of
+output. The output looks like this:
+
+::
+
+    liar test starting
+    test results:
+    units are average count of CPU clocks at 13.888889 nanoseconds each
+    nop:
+        981
+        981
+        981
+        981
+    foo:
+        101144
+        101144
+        101144
+        101144
+    liar test finished
 
 License
 -------
